@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "ActorInfo";
+}
+
+@{
+    MovieShuvie.Models.actors actr = (MovieShuvie.Models.actors)
+        ViewData["actor"];
+ }
+
+<h2>ActorInfo</h2>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="well">
+            Name: <br />
+            <p class="bg-info">@actr.actorName</p>
+            Sex:<br />
+            <p class="bg-info">@actr.actorSex</p>
+            DOB:<br />
+            <p class="bg-info">@actr.actorDOB</p>
+            Bio:<br />
+            <p class="bg-info">@actr.actorInfo</p>
+        </div>
+    </div>
+</div>
+

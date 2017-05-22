@@ -1,0 +1,45 @@
+﻿@using MovieShuvie.ViewModels
+@Model movieActorProducerList
+@{
+    ViewBag.Title = "Read";
+}
+
+
+
+@foreach (movieActorProducerData item in Model.movActProdDataList)
+            {
+    <div class="well">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>@item.movieName</h1>
+                <img class="img-thumbnail float-left" src="@item.imagePath" />
+                <h3>Movie Plot</h3>
+                <p>@item.moviePlot</p>
+            </div>
+
+            <div class="col-md-4 float-right">
+                <h3>Actors</h3>
+                @foreach (string name in @item.actorName)
+                {
+                    @Html.ActionLink(@name, "actorInfo", "actorProducerInfo", new { actorName = @name }, null)<br />
+                }
+                <h3>Producer</h3>
+                <p>@Html.ActionLink(@item.producerName, "producerInfo", "actorProducerInfo", new { producerName = @item.producerName }, null)</p>                
+            </div>
+            <div class="col-md-4">
+                <p>Click on Actors/Producer name for more info..</p>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                @Html.ActionLink("Edit", "Update", "movieList", new { movieID = @item.movieId }, new { @class = "btn btn-primary" } )
+            </div>
+            <div class="col-md-2">
+                <p>@Html.ActionLink("Delete", "Delete", "movieList", new { movieID = @item.movieId }, new { @class = "btn btn-primary" })</p>
+            </div>
+        </div>
+
+    </div>
+}

@@ -1,0 +1,141 @@
+﻿@using MovieShuvie.Models
+@Model  editData
+
+
+@{
+        ViewBag.Title = "Update";
+}
+
+<h2>Update</h2>
+
+<form action="/movieList/Update" enctype="multipart/form-data" method="post">
+
+    <div class="well">
+        <div class="row">
+            <div class="col-md-6">
+                    <input type="hidden" name="movieId" value="@Model.movie.movieId"/> 
+                    <span>Movie Name:</span><input class="form-control input-sm" type="text" id="movName" name="movieName" required value="@Model.movie.movieName" /><br />
+                    <span>Year of Release:</span> <input class="form-control input-sm" type="date" id="YORelease" name="yor" required value="@Model.movie.yor" /><br />
+                    <span>Plot:</span> <textarea class="form-control" rows="5" cols="50" id="info" name="plot" required>@Model.movie.plot</textarea><br />
+                    <span>Upload:</span><br /> <input class="btn btn-primary" id="file" name="file" type="file" required /> <br />
+                
+
+            </div>
+            <div class="col-md-6">
+                <div id="prodEnable">
+                    <input type="hidden" name="producerId" value="@Model.producer.producerId" /> 
+                    <span>Producer Name:</span> <input class="form-control input-sm" type="text" id="prodName" name="producerName" required value="@Model.producer.producerName" /><br />
+                    <span>Sex:</span> <input class="form-control input-sm" type="text" id="sex" name="producerSex" required value="@Model.producer.producerSex" /><br />
+                    <span>DOB:</span> <input class="form-control input-sm" type="date" id="dob" name="producerDOB" required value="@Model.producer.producerDOB" /><br />
+                    <span>Bio:</span> <input class="form-control input-sm" type="text" id="bio" name="producerInfo" required value="@Model.producer.producerInfo" /><br />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+                Actors:<br />
+                @foreach (actors item in @Model.actors)
+                {
+                    <input type="hidden" name="actorId" value="@item.actorId" />
+                    <div class="col-md-3">
+                        <span>Actor Name:</span> <input class="form-control input-sm" type="text" id="prodName" name="actorName" required value="@item.actorName" />
+                    </div>
+                    <div class="col-md-3">
+                        <span>Sex:</span> <input class="form-control input-sm" type="text" id="sex" name="actorSex" required value="@item.actorSex" />
+                    </div>
+                    <div class="col-md-3">
+                        <span>DOB:</span> <input class="form-control input-sm" type="date" id="dob" name="actorDOB" required value="@item.actorDOB" />
+                    </div>
+                    <div class="col-md-3">
+                        <span>Bio:</span> <input class="form-control input-sm" type="text" id="bio" name="actorInfo" required value="@item.actorInfo" /><br />
+                    </div>
+                        }
+        </div>
+
+        <div id="main">
+            <div class="row">
+                <div class="col-md-2">
+                    <input class="btn btn-primary" type="button" id="btAdd" value="Add Actor" class="bt" />
+                </div>
+                <div class="col-md-2">
+                    <input class="btn btn-primary" type="button" id="btRemove" value="Remove Actor" class="bt" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-2">
+                <input class="btn btn-primary" type="submit" name="BtnSubmit" value="Save" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+
+    $(document).ready(function() {
+        var iCnt = 0;
+        // CREATE A "DIV" ELEMENT AND DESIGN IT USING jQuery ".css()" CLASS.
+        var container = $(document.createElement('div')).css({
+            margin: '10px'
+            //padding: '5px', , width: '750px', border: '1px dashed',
+            //borderTopColor: '#999', borderBottomColor: '#999',
+            //borderLeftColor: '#999', borderRightColor: '#999'
+        });
+
+        $('#btAdd').click(function() {
+            if (iCnt <= 19) {
+
+                iCnt = iCnt + 1;
+
+                
+                // ADD TEXTBOX.
+                $(container).append('<div class="row"><div class="col-md-3"><input type=text class="form-control input-sm input" id=tb' + iCnt + ' ' +
+                    'placeholder="Actor Name" name="actorName" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input" id=tb' + iCnt + ' ' +
+                    'placeholder="Sex " name="actorSex" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input" id=tb' + iCnt + ' ' +
+                    'placeholder="DOB " name="actorDOB" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input" id=tb' + iCnt + ' ' +
+                    'placeholder="BIO " name="actorInfo" required /></div></div>');
+
+                // ADD BOTH THE DIV ELEMENTS TO THE "main" CONTAINER.
+                $('#main').after(container);
+            }
+            // AFTER REACHING THE SPECIFIED LIMIT, DISABLE THE "ADD" BUTTON.
+            // (20 IS THE LIMIT WE HAVE SET)
+            else {
+                $(container).append('<label>Reached the limit</label>');
+                $('#btAdd').attr('class', 'bt-disable');
+                $('#btAdd').attr('disabled', 'disabled');
+            }
+        });
+
+        // REMOVE ONE ELEMENT PER CLICK.
+        $('#btRemove').click(function() {
+            if (iCnt != 0) { $('#tb' + iCnt).remove(); iCnt = iCnt - 1; }
+
+            if (iCnt == 0) {
+                $(container)
+                    .empty()
+                    .remove();
+
+                $('#btSubmit').remove();
+                $('#btAdd')
+                    .removeAttr('disabled')
+                    .attr('class', 'bt');
+            }
+        });
+
+        // REMOVE ALL THE ELEMENTS IN THE CONTAINER.
+        
+
+        
+
+        
+
+
+    });
+
+    </script>
+}

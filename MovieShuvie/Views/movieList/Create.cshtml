@@ -1,0 +1,190 @@
+﻿@using MovieShuvie.ViewModels
+@using MovieShuvie.Models
+@Model actorProducerList
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<form action="/movieList/Create" enctype="multipart/form-data" method="post">
+
+    <div class="well">
+        <div class="row">
+            <div class="col-md-4">
+                Movie Name: <input class="form-control input-sm" type="text" id="movieName" name="movieName" /><br />
+                Year of Release: <input class="form-control input-sm" type="date" id="yor" name="yor" /><br />                                                
+                Upload:<br /> <input id="file" name="file" type="file" /> <br />
+                Plot: <textarea class="form-control" rows="5" cols="50" id="plot" name="plot"></textarea><br />                
+            </div>
+            <div class="col-md-4">
+                <div id="prodEnable">
+                    Producer Name: <input class="form-control input-sm" type="text" id="producerName" name="producerName" /><br />
+                    DOB: <input class="form-control input-sm" type="date" id="producerDOB" name="producerDOB" /><br />
+                    Sex: 
+                    <select class="form-control" id="producerSex" name="producerSex">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select><br/>                    
+                    Bio: Info: <textarea class="form-control" rows="5" cols="50" id="producerInfo" name="producerInfo"></textarea><br />
+                </div>                                
+                    <span>Producers:</span><br />                   
+                @if (Model.producersList.Count > 0)
+                {
+                    <select name="producersDB" class="selectProducer">
+                        <option label=""></option>
+                        @foreach (producers item in Model.producersList)
+                        {
+                            <option value=@item.producerName>@item.producerName</option>
+
+                        }
+                    </select>
+                }
+                    
+            </div>
+            <div class="col-md-4">
+                Actor Name: <input class="form-control input-sm" type="text" id="actorName" name="actorName" /><br />
+                DOB: <input class="form-control input-sm" type="date" id="actorDOB" name="actorDOB" /><br />
+                Sex: 
+                <select class="form-control" id="actorSex" name="actorSex">
+                    <option>Male</option>
+                    <option>Female</option>                    
+                </select><br />
+                Bio: <textarea class="form-control" rows="5" cols="50" id="actorInfo" name="actorInfo"></textarea><br />
+                <div>                                       
+                        <span>Actors:</span><br />
+                        @if (Model.actorsList.Count > 0)
+                        {
+                            <select multiple name="actorsDB">
+                            <option label=""></option>
+                                @foreach (actors item in Model.actorsList)
+                                {
+                                    <option value=@item.actorName>@item.actorName</option>
+                                    @*<input type="checkbox" name="earlierActor" value=@item.actorName> @item.actorName<br>*@
+                                }
+                            </select>
+                        }
+                    
+                    
+                    <p>Hold down the Ctrl button to select multiple options.</p>
+                </div>    
+            </div>
+
+        </div>
+        <div class="row">            
+            <div class="col-md-offset-2 pull-right">
+                New Actors:<br />
+                <div id="main">
+                    <input class="btn btn-primary" type="button" id="btAdd" value="Add Actor" />
+                    <input class="btn btn-primary" type="button" id="btRemove" value="Remove Actor" />                    
+                </div>
+            </div>
+            <div class="pull-left">
+                <input class="btn btn-primary" type="submit" name="BtnSubmit" value="Save Details" />
+                <input class="btn btn-primary" type="button" name="BtnReset" value="Reset" id="btRemoveAll" />
+                <input class="btn btn-primary" type="submit" name="BtnSubmit" value="Cancel" />
+            </div>
+        </div>
+
+        
+
+    </div>
+</form>
+@section scripts{
+    <script type="text/javascript">
+
+
+    $(document).ready(function() {
+        var iCnt = 0;
+        // CREATE A "DIV" ELEMENT AND DESIGN IT USING jQuery ".css()" CLASS.
+        var container = $(document.createElement('div')).css({ margin:'10px 0 0 0'
+            //padding: '5px', margin: '10px', width: '660px', border: '1px dashed',
+            //borderTopColor: '#999', borderBottomColor: '#999', borderLeftColor: '#999', borderRightColor: '#999', position: 'relative', right: '390px'
+        });
+
+        $('#btAdd').click(function() {
+            if (iCnt <= 19) {
+                iCnt = iCnt + 1;
+                // ADD TEXTBOX.
+                $(container).append('<div class="row" id=tb' + iCnt +'><div class="col-md-3"><input type=text class="form-control input-sm input"' +
+                    'placeholder="Actor Name" name="actorName" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input"' +
+                    'placeholder="Sex " name="actorSex" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input"' +
+                    'placeholder="DOB " name="actorDOB" required /></div><div class="col-md-3"><input type=text class="form-control input-sm input"' +
+                    'placeholder="BIO " name="actorInfo" required /></div></div>');
+
+                // ADD BOTH THE DIV ELEMENTS TO THE "main" CONTAINER.
+                $('#main').after(container);
+            }
+            // AFTER REACHING THE SPECIFIED LIMIT, DISABLE THE "ADD" BUTTON.
+            // (20 IS THE LIMIT WE HAVE SET)
+            else {
+                $(container).append('<label>Reached the limit</label>');
+                $('#btAdd').attr('class', 'bt-disable');
+                $('#btAdd').attr('disabled', 'disabled');
+            }
+        });
+
+        // REMOVE ONE ELEMENT PER CLICK.
+        $('#btRemove').click(function() {
+            if (iCnt != 0) { $('#tb' + iCnt).remove(); iCnt = iCnt - 1; }
+
+            if (iCnt == 0) {
+                $(container)
+                    .empty()
+                    .remove();
+
+                
+                //$('#btAdd')
+                //    .removeAttr('disabled')
+                //    .attr('class', 'bt');
+            }
+        });
+
+        // REMOVE ALL THE ELEMENTS IN THE CONTAINER.
+        $('#btRemoveAll').click(function() {
+            $(container)
+                .empty()
+                .remove();
+
+            //$('#btAdd')
+            //    .removeAttr('disabled')
+            //    .attr('class', 'bt');
+
+            document.getElementById('movieName').value = "";
+            document.getElementById('yor').value = "";
+            document.getElementById('plot').value = "";
+            document.getElementById('file').value = "";
+            document.getElementById('producerName').value = "";
+            document.getElementById('producerSex').value = "";
+            document.getElementById('producerDOB').value = "";
+            document.getElementById('producerInfo').value = "";
+            document.getElementById('actorName').value = "";
+            document.getElementById('actorSex').value = "";
+            document.getElementById('actorDOB').value = "";
+            document.getElementById('actorInfo').value = "";
+            //document.getElementById('main').value = "";
+            $("#prodEnable").children().prop('disabled', false);
+            $(".selectProducer").val('');
+        });
+
+        $('input:radio[name=producers]:checked').change(function () {
+
+
+        });
+
+        $(".selectProducer").change(function () {
+            var item = $(this).val();
+
+            if (item === "") {
+                $("#prodEnable").children().prop('disabled', false);
+            } else {
+                $("#prodEnable").children().prop('disabled', true);
+            }
+            
+        });
+
+
+    });
+
+    </script>
+    }
